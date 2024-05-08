@@ -60,7 +60,7 @@ public class Puzzle : MonoBehaviour
 
             List<int> typesIndex = new(levelDifficulty.Count);
             for (int i = 0; i < levelDifficulty.Count; i++) typesIndex.Add(0);
-            
+
             for (int i = 0; i < puzzlePieces.Count; i++)
             {
                 int type = puzzlePieces[i].type;
@@ -95,18 +95,20 @@ public class Puzzle : MonoBehaviour
                 piece.Target.Highlight(false);
                 piece.SetTargetPiece(null);
             }
-            return;
         }
-        for (int i = 0; i < puzzlePieces.Count; i++)
+        else
         {
-            if (puzzlePieces[i].currentID == piece.currentID || !puzzlePieces[i].enabled) continue;
-            float distance = Vector2.Distance(piece.transform.position, puzzlePieces[i].transform.position);
-            //Debug.Log(puzzlePieces[i].name + " Distance: " + distance);
-            if (distance <= captureDistance && piece.type == puzzlePieces[i].type)
+            for (int i = 0; i < puzzlePieces.Count; i++)
             {
-                piece.SetTargetPiece(puzzlePieces[i]);
-                piece.Target.Highlight(true);
-                break;
+                if (puzzlePieces[i].currentID == piece.currentID || !puzzlePieces[i].enabled) continue;
+                float distance = Vector2.Distance(piece.transform.position, puzzlePieces[i].transform.position);
+                //Debug.Log(puzzlePieces[i].name + " Distance: " + distance);
+                if (distance <= captureDistance && piece.type == puzzlePieces[i].type)
+                {
+                    piece.SetTargetPiece(puzzlePieces[i]);
+                    piece.Target.Highlight(true);
+                    break;
+                }
             }
         }
     }
@@ -117,9 +119,9 @@ public class Puzzle : MonoBehaviour
         {
             int id = piece.currentID;
 
-            if (piece.PlacePieceOn(piece.Target.transform.position, piece.Target.currentID))
+            if (piece.PlacePieceOn(piece.Target.transform.position, piece.Target.currentID, true))
                 sortedPiecesCount++;
-            if (piece.Target.PlacePieceOn(piece.startPos, id))
+            if (piece.Target.PlacePieceOn(piece.startPos, id, true))
                 sortedPiecesCount++;
 
             piece.Target.Highlight(false);
@@ -129,7 +131,7 @@ public class Puzzle : MonoBehaviour
         }
         else
         {
-            piece.PlacePieceOn(piece.startPos, piece.currentID);
+            piece.PlacePieceOn(piece.startPos, piece.currentID, true);
         }
     }
 }

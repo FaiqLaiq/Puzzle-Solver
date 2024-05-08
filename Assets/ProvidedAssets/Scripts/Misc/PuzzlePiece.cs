@@ -46,9 +46,13 @@ public class PuzzlePiece : MonoBehaviour
         this.target = target;
     }
 
-    public bool PlacePieceOn(Vector3 position, int ID)
+    public bool PlacePieceOn(Vector3 position, int ID, bool smooth = false)
     {
-        transform.position = position;
+        if (smooth)
+            TweenWrapper.PositionByTime(gameObject, transform.position, position, 0.3f);
+        else
+            transform.position = position;
+
         currentID = ID;
 
         if (currentID == orignalID)
@@ -59,8 +63,13 @@ public class PuzzlePiece : MonoBehaviour
 
     public void Highlight(bool highlight)
     {
-        float scale = highlight ? 0.8f : 1;
-        transform.localScale = new Vector3(scale, scale, scale);
+        TweenWrapper.Stop(gameObject, TweenWrapper.TweenType.Scale);
+
+        Debug.Log("Highlight: " + gameObject.name + " -> " + highlight);
+        if (highlight)
+            TweenWrapper.ScaleBySpeed(gameObject, transform.localScale, Vector3.one * 0.9f, 2);
+        else
+            transform.localScale = Vector3.one;
     }
 
     void OnMouseDown()
